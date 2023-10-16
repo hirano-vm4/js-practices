@@ -1,5 +1,5 @@
 function fizzBuzz(n) {
-  if (n < 1) {
+  if (!Number.isInteger(n) || n < 1) {
     console.log("1以上の整数を入力してください");
     return;
   }
