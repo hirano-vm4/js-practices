@@ -14,6 +14,7 @@ const createCustomDate = (options) => {
 
   if (options.y) customDate.setFullYear(options.y);
   if (options.m) customDate.setMonth(options.m - 1);
+  customDate.setDate(1);
   return customDate;
 };
 
@@ -21,17 +22,15 @@ const getLastDay = (date) =>
   new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
 const formatMonthCalendar = (dateOjt, lastDay) => {
+  let formattedOutput = "   ".repeat(dateOjt.getDay());
+
   for (let day = 1; day <= lastDay; day++) {
     dateOjt.setDate(day);
     const dayString = dateOjt.getDate().toString().padStart(2, " ");
-    const formattedDay =
-      dateOjt.getDate() === 1
-        ? "   ".repeat(dateOjt.getDay()) + dayString
-        : dayString;
-
-    const separator = dateOjt.getDay() === 6 ? "\n" : " ";
-    process.stdout.write(formattedDay + separator);
+    const separator = dateOjt.getDay() === 6 || day === lastDay ? "\n" : " ";
+    formattedOutput += dayString + separator;
   }
+  process.stdout.write(formattedOutput);
 };
 
 const outputCal = (displayDate, lastDay) => {
