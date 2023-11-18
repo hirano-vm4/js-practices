@@ -21,13 +21,13 @@ const createCustomDate = (options) => {
 const getLastDay = (date) =>
   new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
-const formatMonthCalendar = (dateOjt, lastDay) => {
-  let formattedOutput = "   ".repeat(dateOjt.getDay());
+const formatMonthCalendar = (dateObj, lastDay) => {
+  let formattedOutput = "   ".repeat(dateObj.getDay());
 
   for (let day = 1; day <= lastDay; day++) {
-    dateOjt.setDate(day);
-    const dayString = dateOjt.getDate().toString().padStart(2, " ");
-    const separator = dateOjt.getDay() === 6 || day === lastDay ? "\n" : " ";
+    dateObj.setDate(day);
+    const dayString = dateObj.getDate().toString().padStart(2, " ");
+    const separator = dateObj.getDay() === 6 || day === lastDay ? "\n" : " ";
     formattedOutput += dayString + separator;
   }
   process.stdout.write(formattedOutput);
