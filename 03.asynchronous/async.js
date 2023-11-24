@@ -28,7 +28,7 @@ const err = async () => {
   try {
     await bookTableOperations.getRecordErr();
   } catch (err) {
-    console.log(`レコードの取得エラー: ${err.message}`);
+    console.log(`レコード取得エラー: ${err.message}`);
   }
 
   await bookTableOperations.deleteRecord();
