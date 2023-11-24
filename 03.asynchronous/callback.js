@@ -9,14 +9,12 @@ db.run(
   () => {
     db.run(
       "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')",
-      () => {
-        db.get("SELECT id FROM books", (_err, row) => {
-          console.log(`id: ${row.id}`);
-          db.get("SELECT * FROM books", (_err, row) => {
-            console.log(row);
-            db.run("DROP TABLE books", () => {
-              console.log("テーブルを削除しました");
-            });
+      function () {
+        console.log(`id: ${this.lastID}`);
+        db.get("SELECT * FROM books", (_err, row) => {
+          console.log(row);
+          db.run("DROP TABLE books", () => {
+            console.log("テーブルを削除しました");
           });
         });
       }
@@ -31,9 +29,13 @@ db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
     db.run("INSERT INTO books(title) VALUES(null)", (err) => {
-      if (err) console.log(`レコード追加エラー: ${err.message}`);
+      if (err) {
+        console.log(`レコード追加エラー: ${err.message}`);
+      }
       db.get("SELECT * FROM errs", (err) => {
-        if (err) console.log(`レコード取得エラー: ${err.message}`);
+        if (err) {
+          console.log(`レコード取得エラー: ${err.message}`);
+        }
         db.run("DROP TABLE books", () => {
           console.log("テーブルを削除しました");
         });
