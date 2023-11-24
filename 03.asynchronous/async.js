@@ -1,37 +1,47 @@
+import sqlite3 from "sqlite3";
 import timers from "timers/promises";
-import * as bookTableOperations from "./table_function.js";
+import { run, get } from "./table_function.js";
+
+const db = new sqlite3.Database(":memory:");
 
 // 3. async / await （エラーなし）
+await run(
+  db,
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)"
+);
 
-const noErr = async () => {
-  await bookTableOperations.createTable();
-  await bookTableOperations.insertTitle();
-  await bookTableOperations.getId();
-  await bookTableOperations.getRecord();
-  await bookTableOperations.deleteRecord();
-};
+const insertedBook = await run(
+  db,
+  "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')"
+);
+console.log(`id: ${insertedBook.lastID}`);
 
-noErr();
+const selectedBook = await get(db, "SELECT * FROM books");
+console.log(selectedBook);
+
+await run(db, "DROP TABLE books");
+console.log("テーブルを削除しました");
 
 await timers.setTimeout(1000);
 
 // 3. async / await （エラーあり）
-const err = async () => {
-  await bookTableOperations.createTable();
 
-  try {
-    await bookTableOperations.insertTitleErr();
-  } catch (err) {
-    console.log(`レコード追加エラー: ${err.message}`);
-  }
+await run(
+  db,
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)"
+);
 
-  try {
-    await bookTableOperations.getRecordErr();
-  } catch (err) {
-    console.log(`レコード取得エラー: ${err.message}`);
-  }
+try {
+  await run(db, "INSERT INTO books (title) VALUES (null)");
+} catch (err) {
+  console.log(`レコード追加エラー: ${err.message}`);
+}
 
-  await bookTableOperations.deleteRecord();
-};
+try {
+  await get(db, "SELECT * FROM titles");
+} catch (err) {
+  console.log(`レコード取得エラー: ${err.message}`);
+}
 
-err();
+await run(db, "DROP TABLE books");
+console.log("テーブルを削除しました");

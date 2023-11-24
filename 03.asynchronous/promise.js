@@ -1,21 +1,44 @@
+import sqlite3 from "sqlite3";
 import timers from "timers/promises";
-import * as bookTableOperations from "./table_function.js";
+import { run, get } from "./table_function.js";
+
+const db = new sqlite3.Database(":memory:");
 
 // 2. Promise(エラーなし)
-bookTableOperations
-  .createTable()
-  .then(() => bookTableOperations.insertTitle())
-  .then(() => bookTableOperations.getId())
-  .then(() => bookTableOperations.getRecord())
-  .then(() => bookTableOperations.deleteRecord());
+run(
+  db,
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)"
+).then(() =>
+  run(db, "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')")
+    .then((insertedBook) => {
+      console.log(`id: ${insertedBook.lastID}`);
+      return get(db, "SELECT * FROM books");
+    })
+    .then((selectedBook) => {
+      console.log(selectedBook);
+      return run(db, "DROP TABLE books");
+    })
+    .then(() => {
+      console.log("テーブルを削除しました");
+    })
+);
 
 await timers.setTimeout(1000);
 
 // 2. Promise(エラーあり)
-bookTableOperations
-  .createTable()
-  .then(() => bookTableOperations.insertTitleErr())
-  .catch((err) => console.log(`レコード追加エラー: ${err.message}`))
-  .then(() => bookTableOperations.getRecordErr())
-  .catch((err) => console.log(`レコードの取得エラー: ${err.message}`))
-  .then(() => bookTableOperations.deleteRecord());
+run(
+  db,
+  "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)"
+)
+  .then(() => run(db, "INSERT INTO books (title) VALUES (null)"))
+  .catch((err) => {
+    console.log(`レコード追加エラー: ${err.message}`);
+    return get(db, "SELECT * FROM titles");
+  })
+  .catch((err) => {
+    console.log(`レコード取得エラー: ${err.message}`);
+    return run(db, "DROP TABLE books");
+  })
+  .then(() => {
+    console.log("テーブルを削除しました");
+  });
