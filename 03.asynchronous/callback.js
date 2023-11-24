@@ -1,9 +1,9 @@
-// 1. コールバック（エラーなし）
 import sqlite3 from "sqlite3";
 import timers from "timers/promises";
 
 const db = new sqlite3.Database(":memory:");
 
+// 1. コールバック（エラーなし）
 db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
