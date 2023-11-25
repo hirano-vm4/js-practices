@@ -34,13 +34,13 @@ await run(
 try {
   await run(db, "INSERT INTO books (title) VALUES (null)");
 } catch (err) {
-  console.log(`レコード追加エラー: ${err.message}`);
+  console.error(`レコード追加エラー: ${err.message}`);
 }
 
 try {
   await get(db, "SELECT * FROM titles");
 } catch (err) {
-  console.log(`レコード取得エラー: ${err.message}`);
+  console.error(`レコード取得エラー: ${err.message}`);
 }
 
 await run(db, "DROP TABLE books");

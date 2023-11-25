@@ -30,11 +30,11 @@ db.run(
   () => {
     db.run("INSERT INTO books(title) VALUES(null)", (err) => {
       if (err) {
-        console.log(`レコード追加エラー: ${err.message}`);
+        console.error(`レコード追加エラー: ${err.message}`);
       }
       db.get("SELECT * FROM errs", (err) => {
         if (err) {
-          console.log(`レコード取得エラー: ${err.message}`);
+          console.error(`レコード取得エラー: ${err.message}`);
         }
         db.run("DROP TABLE books", () => {
           console.log("テーブルを削除しました");

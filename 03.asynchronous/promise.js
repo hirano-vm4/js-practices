@@ -32,11 +32,11 @@ run(
 )
   .then(() => run(db, "INSERT INTO books (title) VALUES (null)"))
   .catch((err) => {
-    console.log(`レコード追加エラー: ${err.message}`);
+    console.error(`レコード追加エラー: ${err.message}`);
     return get(db, "SELECT * FROM titles");
   })
   .catch((err) => {
-    console.log(`レコード取得エラー: ${err.message}`);
+    console.error(`レコード取得エラー: ${err.message}`);
     return run(db, "DROP TABLE books");
   })
   .then(() => {
