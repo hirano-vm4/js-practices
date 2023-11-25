@@ -8,7 +8,7 @@ db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
     db.run(
-      "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')",
+      "INSERT INTO books (title) VALUES ('ゼロからわかるRuby超入門')",
       function () {
         console.log(`id: ${this.lastID}`);
         db.get("SELECT * FROM books", (_err, row) => {
@@ -28,7 +28,7 @@ await timers.setTimeout(1000);
 db.run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
   () => {
-    db.run("INSERT INTO books(title) VALUES(null)", (err) => {
+    db.run("INSERT INTO books (title) VALUES (null)", (err) => {
       if (err) {
         console.error(`レコード追加エラー: ${err.message}`);
       }
