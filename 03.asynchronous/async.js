@@ -25,7 +25,6 @@ console.log("テーブルを削除しました");
 await timers.setTimeout(1000);
 
 // 3. async / await （エラーあり）
-
 await run(
   db,
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)"
