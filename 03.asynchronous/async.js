@@ -10,14 +10,14 @@ await run(
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)"
 );
 
-const insertedBook = await run(
+const result = await run(
   db,
   "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')"
 );
-console.log(`id: ${insertedBook.lastID}`);
+console.log(`id: ${result.lastID}`);
 
-const selectedBook = await get(db, "SELECT * FROM books");
-console.log(selectedBook);
+const book = await get(db, "SELECT * FROM books");
+console.log(book);
 
 await run(db, "DROP TABLE books");
 console.log("テーブルを削除しました");

@@ -12,12 +12,12 @@ run(
   .then(() =>
     run(db, "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')")
   )
-  .then((insertedBook) => {
-    console.log(`id: ${insertedBook.lastID}`);
+  .then((result) => {
+    console.log(`id: ${result.lastID}`);
     return get(db, "SELECT * FROM books");
   })
-  .then((selectedBook) => {
-    console.log(selectedBook);
+  .then((book) => {
+    console.log(book);
     return run(db, "DROP TABLE books");
   })
   .then(() => {
