@@ -8,20 +8,21 @@ const db = new sqlite3.Database(":memory:");
 run(
   db,
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)"
-).then(() =>
-  run(db, "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')")
-    .then((insertedBook) => {
-      console.log(`id: ${insertedBook.lastID}`);
-      return get(db, "SELECT * FROM books");
-    })
-    .then((selectedBook) => {
-      console.log(selectedBook);
-      return run(db, "DROP TABLE books");
-    })
-    .then(() => {
-      console.log("テーブルを削除しました");
-    })
-);
+)
+  .then(() =>
+    run(db, "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')")
+  )
+  .then((insertedBook) => {
+    console.log(`id: ${insertedBook.lastID}`);
+    return get(db, "SELECT * FROM books");
+  })
+  .then((selectedBook) => {
+    console.log(selectedBook);
+    return run(db, "DROP TABLE books");
+  })
+  .then(() => {
+    console.log("テーブルを削除しました");
+  });
 
 await timers.setTimeout(1000);
 
