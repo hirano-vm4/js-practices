@@ -12,7 +12,7 @@ await run(
 
 const result = await run(
   db,
-  "INSERT INTO books(title) VALUES('ゼロからわかるRuby超入門')"
+  "INSERT INTO books (title) VALUES ('ゼロからわかるRuby超入門')"
 );
 console.log(`id: ${result.lastID}`);
 

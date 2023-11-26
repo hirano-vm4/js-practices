@@ -32,7 +32,7 @@ db.run(
       if (err) {
         console.error(`レコード追加エラー: ${err.message}`);
       }
-      db.get("SELECT * FROM errs", (err) => {
+      db.get("SELECT * FROM titles", (err) => {
         if (err) {
           console.error(`レコード取得エラー: ${err.message}`);
         }
