@@ -33,20 +33,20 @@ await run(
 try {
   await run(db, "INSERT INTO books (title) VALUES (null)");
 } catch (err) {
-  if (err instanceof Error && err.code === "SQLITE_CONSTRAINT") {
+  if (err instanceof Error) {
     console.error(`レコード追加エラー: ${err.message}`);
   } else {
-    console.error(new Error(err));
+    throw err;
   }
 }
 
 try {
   await get(db, "SELECT * FROM titles");
 } catch (err) {
-  if (err instanceof Error && err.code === "SQLITE_ERROR") {
+  if (err instanceof Error) {
     console.error(`レコード取得エラー: ${err.message}`);
   } else {
-    console.error(new Error(err));
+    throw err;
   }
 }
 
