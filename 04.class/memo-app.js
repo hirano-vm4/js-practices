@@ -38,9 +38,10 @@ export class MemoApp {
     const validOptions = ["l", "r", "d"];
 
     if (
-      !Object.keys(userOption).some(
-        (option) => validOptions.includes(option) || process.stdin
-      )
+      !Object.keys(userOption).some((option) =>
+        validOptions.includes(option)
+      ) &&
+      process.stdin.isTTY
     ) {
       throw new Error("オプションは -l -r -d のどれかで指定してください");
     }
