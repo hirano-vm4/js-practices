@@ -43,9 +43,9 @@ export class MemoApp {
     if (
       !Object.keys(userOption).some((option) => validOptions.includes(option))
     ) {
-      throw new Error(`
-        ・オプションは '-l'(一覧表示)、'-r'(詳細表示)、'-d'(削除)のいずれかで指定してください\n・メモの保存は [$echo '保存するメモの内容' | ./main.js] の形式で入力してください"
-      `);
+      throw new Error(
+        "・オプションは '-l'(一覧表示)、'-r'(詳細表示)、'-d'(削除)のいずれかで指定してください\n・メモの保存は [$echo '保存するメモの内容' | ./main.js] の形式で入力してください"
+      );
     }
     return userOption;
   }
@@ -63,17 +63,18 @@ export class MemoApp {
   }
 
   async show() {
-    const memo = await this.select();
-    console.log(`\n${memo.content}`);
+    const selectedMemoId = await this.selectMemoId();
+    const memo = await this.db.find(selectedMemoId);
+    console.log(`\n${memo[0].content}`);
   }
 
   async delete() {
-    const memo = await this.select();
-    await this.db.delete(memo.id);
-    console.log(`\n[以下のメモが削除されました]\n\n${memo.content}`);
+    const selectedMemoId = await this.selectMemoId();
+    await this.db.delete(selectedMemoId);
+    console.log(`id:${selectedMemoId} のメモが削除されました`);
   }
 
-  async select() {
+  async selectMemoId() {
     const results = await this.db.list();
 
     const choices = results.map((result) => ({
@@ -91,7 +92,6 @@ export class MemoApp {
       },
     });
 
-    const selectedMemo = results.find((result) => result.id === response.id);
-    return selectedMemo;
+    return response.id;
   }
 }
