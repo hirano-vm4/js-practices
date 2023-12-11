@@ -12,7 +12,7 @@ export class MemoApp {
 
   async exec() {
     try {
-      const option = this.option();
+      const option = await this.option();
 
       if (option.l) {
         this.index();
@@ -21,8 +21,7 @@ export class MemoApp {
       } else if (option.d) {
         this.delete();
       } else {
-        const content = readFileSync("/dev/stdin", "utf-8");
-        this.save(content);
+        this.save(option.content);
       }
     } catch (err) {
       if (err instanceof Error) {
@@ -33,19 +32,21 @@ export class MemoApp {
     }
   }
 
-  option() {
+  async option() {
     const userOption = minimist(process.argv.slice(2));
-    const validOptions = ["l", "r", "d"];
+    const validOptions = ["l", "r", "d", "content"];
 
-    if (
-      !Object.keys(userOption).some((option) =>
-        validOptions.includes(option)
-      ) &&
-      process.stdin.isTTY
-    ) {
-      throw new Error("オプションは -l -r -d のどれかで指定してください");
+    if (!process.stdin.isTTY) {
+      userOption["content"] = readFileSync("/dev/stdin", "utf-8");
     }
 
+    if (
+      !Object.keys(userOption).some((option) => validOptions.includes(option))
+    ) {
+      throw new Error(`
+        ・オプションは '-l'(一覧表示)、'-r'(詳細表示)、'-d'(削除)のいずれかで指定してください\n・メモの保存は [$echo '保存するメモの内容' | ./main.js] の形式で入力してください"
+      `);
+    }
     return userOption;
   }
 
