@@ -3,13 +3,13 @@ export class MemoController {
     this.db = db;
   }
 
-  createTable = async () => {
+  async createTable() {
     await this.run(
       "CREATE TABLE IF NOT EXISTS memos(id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT NOT NULL)"
     );
-  };
+  }
 
-  create = async (content) => {
+  async create(content) {
     await this.createTable();
     const result = await this.run(
       "INSERT INTO memos(content) VALUES(?)",
@@ -17,18 +17,18 @@ export class MemoController {
     );
 
     return result.lastID;
-  };
+  }
 
-  delete = async (id) => {
+  async delete(id) {
     await this.run("DELETE FROM memos WHERE id = ?", id);
-  };
+  }
 
-  list = async () => {
+  async list() {
     await this.createTable();
     return await this.all("SELECT * FROM memos");
-  };
+  }
 
-  run = (sql, params = []) => {
+  run(sql, params = []) {
     return new Promise((resolve, reject) => {
       this.db.run(sql, params, function (err) {
         if (err) {
@@ -38,9 +38,9 @@ export class MemoController {
         }
       });
     });
-  };
+  }
 
-  all = (sql) => {
+  all(sql) {
     return new Promise((resolve, reject) => {
       this.db.all(sql, (err, rows) => {
         if (err) {
@@ -50,5 +50,5 @@ export class MemoController {
         }
       });
     });
-  };
+  }
 }

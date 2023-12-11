@@ -33,7 +33,7 @@ export class MemoApp {
     }
   }
 
-  option = () => {
+  option() {
     const userOption = minimist(process.argv.slice(2));
     const validOptions = ["l", "r", "d"];
 
@@ -47,32 +47,32 @@ export class MemoApp {
     }
 
     return userOption;
-  };
+  }
 
-  save = async (content) => {
+  async save(content) {
     const id = await this.db.create(content);
     console.log(`メモが保存されました(ID: ${id})`);
-  };
+  }
 
-  index = async () => {
+  async index() {
     const memos = await this.db.list();
     memos.forEach((memo) => {
       console.log(memo.content.split("\n")[0]);
     });
-  };
+  }
 
-  show = async () => {
+  async show() {
     const memo = await this.select();
     console.log(`\n${memo.content}`);
-  };
+  }
 
-  delete = async () => {
+  async delete() {
     const memo = await this.select();
     await this.db.delete(memo.id);
     console.log(`\n[以下のメモが削除されました]\n\n${memo.content}`);
-  };
+  }
 
-  select = async () => {
+  async select() {
     const results = await this.db.list();
 
     const choices = results.map((result) => ({
@@ -92,5 +92,5 @@ export class MemoApp {
 
     const selectedMemo = results.find((result) => result.id === response.id);
     return selectedMemo;
-  };
+  }
 }
