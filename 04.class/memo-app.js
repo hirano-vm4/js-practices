@@ -1,4 +1,4 @@
-import { MemoController } from "./memo-controller.js";
+import { Database } from "./memo-controller.js";
 import { readFileSync } from "fs";
 import sqlite3 from "sqlite3";
 import enquirer from "enquirer";
@@ -6,8 +6,8 @@ import minimist from "minimist";
 
 export class MemoApp {
   constructor() {
-    const sqlite3Database = new sqlite3.Database("./memo.sqlite3");
-    this.db = new MemoController(sqlite3Database);
+    const db = new sqlite3.Database("./memo.sqlite3");
+    this.memoController = new Database(db);
   }
 
   async exec() {
@@ -51,12 +51,12 @@ export class MemoApp {
   }
 
   async save(content) {
-    const id = await this.db.create(content);
+    const id = await this.memoController.create(content);
     console.log(`メモが保存されました(ID: ${id})`);
   }
 
   async index() {
-    const memos = await this.db.list();
+    const memos = await this.memoController.list();
     memos.forEach((memo) => {
       console.log(memo.content.split("\n")[0]);
     });
@@ -64,18 +64,18 @@ export class MemoApp {
 
   async show() {
     const selectedMemoId = await this.selectMemoId();
-    const memo = await this.db.find(selectedMemoId);
+    const memo = await this.memoController.find(selectedMemoId);
     console.log(`\n${memo[0].content}`);
   }
 
   async delete() {
     const selectedMemoId = await this.selectMemoId();
-    await this.db.delete(selectedMemoId);
+    await this.memoController.delete(selectedMemoId);
     console.log(`id:${selectedMemoId} のメモが削除されました`);
   }
 
   async selectMemoId() {
-    const results = await this.db.list();
+    const results = await this.memoController.list();
 
     const choices = results.map((result) => ({
       name: result.content.split("\n")[0],

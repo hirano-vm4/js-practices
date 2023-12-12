@@ -1,4 +1,4 @@
-export class MemoController {
+export class Database {
   constructor(db) {
     this.db = db;
   }
