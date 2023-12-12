@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { MemoApp } from "./memo-app.js";
+import { MemoApp } from "./memo_app.js";
 
 const memo = new MemoApp();
 memo.exec();

@@ -1,4 +1,4 @@
-import { Database } from "./memo-controller.js";
+import { DatabaseController } from "./database_controller.js";
 import { readFileSync } from "fs";
 import sqlite3 from "sqlite3";
 import enquirer from "enquirer";
@@ -6,8 +6,8 @@ import minimist from "minimist";
 
 export class MemoApp {
   constructor() {
-    const db = new sqlite3.Database("./memo.sqlite3");
-    this.memoController = new Database(db);
+    const databaseInstance = new sqlite3.Database("./memo.sqlite3");
+    this.memoController = new DatabaseController(databaseInstance);
   }
 
   async exec() {
