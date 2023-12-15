@@ -6,8 +6,8 @@ import minimist from "minimist";
 
 export class MemoApp {
   constructor() {
-    const databaseInstance = new sqlite3.Database("./memo.sqlite3");
-    this.memoController = new DatabaseController(databaseInstance);
+    const database = new sqlite3.Database("./memo.sqlite3");
+    this.memoController = new DatabaseController(database);
   }
 
   async exec() {
