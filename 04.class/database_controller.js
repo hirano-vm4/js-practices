@@ -30,7 +30,8 @@ export class DatabaseController {
 
   async find(id) {
     await this.createTable();
-    return await this.all("SELECT * FROM memos WHERE id = ?", id);
+    const memo = await this.all("SELECT * FROM memos WHERE id = ?", id);
+    return memo[0];
   }
 
   run(sql, params = []) {

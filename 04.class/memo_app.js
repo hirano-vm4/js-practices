@@ -65,7 +65,7 @@ export class MemoApp {
   async show() {
     const selectedMemoId = await this.selectMemoId();
     const memo = await this.memoController.find(selectedMemoId);
-    console.log(`\n${memo[0].content}`);
+    console.log(`\n${memo.content}`);
   }
 
   async delete() {
