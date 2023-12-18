@@ -70,7 +70,7 @@ export class MemoApp {
       });
 
       rl.on("close", () => {
-        console.log("入力が終了しました");
+        console.log("[入力が終了しました]\n");
         resolve(lines);
       });
     });
