@@ -1,8 +1,8 @@
 import { DatabaseController } from "./database_controller.js";
-import { readFileSync } from "fs";
 import sqlite3 from "sqlite3";
 import enquirer from "enquirer";
 import minimist from "minimist";
+import readline from "readline";
 
 export class MemoApp {
   constructor() {
@@ -21,7 +21,10 @@ export class MemoApp {
       } else if (option.d) {
         this.delete();
       } else {
-        this.save(option.content);
+        const terminalLines = await this.readTerminalLines();
+        const title = terminalLines[0];
+        const content = terminalLines.slice(1).join("\n");
+        this.save(title, content);
       }
     } catch (err) {
       if (err instanceof Error) {
@@ -33,52 +36,76 @@ export class MemoApp {
   }
 
   async option() {
-    const userOption = minimist(process.argv.slice(2));
-    const validOptions = ["l", "r", "d", "content"];
+    const commandLineOptions = minimist(process.argv.slice(2));
+    const validOptions = ["l", "r", "d", "_"];
 
-    if (!process.stdin.isTTY) {
-      userOption["content"] = readFileSync("/dev/stdin", "utf-8");
-    }
+    const isValidOption = Object.keys(commandLineOptions).every((option) =>
+      validOptions.includes(option)
+    );
 
-    if (
-      !Object.keys(userOption).some((option) => validOptions.includes(option))
-    ) {
+    if (!isValidOption || commandLineOptions._.length > 0) {
       throw new Error(
-        "・オプションは '-l'(一覧表示)、'-r'(詳細表示)、'-d'(削除)のいずれかで指定してください\n・メモの保存は [$echo '保存するメモの内容' | ./main.js] の形式で入力してください"
+        "・オプションは '-l'(一覧表示)、'-r'(詳細表示)、'-d'(削除)のいずれかで指定してください"
       );
     }
-    return userOption;
+    return commandLineOptions;
   }
 
-  async save(content) {
-    const id = await this.memoController.create(content);
+  async readTerminalLines() {
+    process.stdin.resume();
+    process.stdin.setEncoding("utf8");
+
+    const rl = readline.createInterface({
+      input: process.stdin,
+    });
+
+    const lines = new Promise((resolve) => {
+      console.log(
+        "・メモの入力が終わったら改行して`control + D`を押してください\n・1行目はタイトルです\n"
+      );
+      const lines = [];
+
+      rl.on("line", (line) => {
+        lines.push(line);
+      });
+
+      rl.on("close", () => {
+        console.log("入力が終了しました");
+        resolve(lines);
+      });
+    });
+    return lines;
+  }
+
+  async save(title, content) {
+    const id = await this.memoController.create(title, content);
     console.log(`メモが保存されました(ID: ${id})`);
   }
 
   async index() {
     const memos = await this.memoController.list();
     memos.forEach((memo) => {
-      console.log(memo.content.split("\n")[0]);
+      console.log(memo.title);
     });
   }
 
   async show() {
     const selectedMemoId = await this.selectMemoId();
     const memo = await this.memoController.find(selectedMemoId);
-    console.log(`\n${memo.content}`);
+    console.log(`\n[${memo.title}]\n${memo.content}`);
   }
 
   async delete() {
     const selectedMemoId = await this.selectMemoId();
     await this.memoController.delete(selectedMemoId);
-    console.log(`id:${selectedMemoId} のメモが削除されました`);
+    console.log(`\nid:${selectedMemoId} のメモが削除されました`);
   }
 
   async selectMemoId() {
-    const results = await this.memoController.list();
+    const memoLists = await this.memoController.list();
 
-    const choices = results.map((result) => ({
-      name: result.content.split("\n")[0],
+    const choices = memoLists.map((result) => ({
+      name: result.title,
       value: result.id,
     }));
 

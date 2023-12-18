@@ -5,15 +5,15 @@ export class DatabaseController {
 
   async createTable() {
     await this.run(
-      "CREATE TABLE IF NOT EXISTS memos(id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT NOT NULL)"
+      "CREATE TABLE IF NOT EXISTS memos(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL , content TEXT NOT NULL)"
     );
   }
 
-  async create(content) {
+  async create(title, content) {
     await this.createTable();
     const result = await this.run(
-      "INSERT INTO memos(content) VALUES(?)",
-      content
+      "INSERT INTO memos(title, content) VALUES(?, ?)",
+      [title, content]
     );
 
     return result.lastID;
