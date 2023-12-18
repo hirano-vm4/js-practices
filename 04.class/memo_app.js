@@ -7,7 +7,7 @@ import readline from "readline";
 export class MemoApp {
   constructor() {
     const database = new sqlite3.Database("./memo.sqlite3");
-    this.memoController = new DatabaseController(database);
+    this.databaseController = new DatabaseController(database);
   }
 
   async exec() {
@@ -78,12 +78,14 @@ export class MemoApp {
   }
 
   async save(title, content) {
-    const id = await this.memoController.create(title, content);
+    console.log(title);
+    console.log(content);
+    const id = await this.databaseController.create(title, content);
     console.log(`メモが保存されました(ID: ${id})`);
   }
 
   async index() {
-    const memos = await this.memoController.list();
+    const memos = await this.databaseController.list();
     memos.forEach((memo) => {
       console.log(memo.title);
     });
@@ -91,18 +93,18 @@ export class MemoApp {
 
   async show() {
     const selectedMemoId = await this.selectMemoId();
-    const memo = await this.memoController.find(selectedMemoId);
+    const memo = await this.databaseController.find(selectedMemoId);
     console.log(`\n[${memo.title}]\n${memo.content}`);
   }
 
   async delete() {
     const selectedMemoId = await this.selectMemoId();
-    await this.memoController.delete(selectedMemoId);
+    await this.databaseController.delete(selectedMemoId);
     console.log(`\nid:${selectedMemoId} のメモが削除されました`);
   }
 
   async selectMemoId() {
-    const memoLists = await this.memoController.list();
+    const memoLists = await this.databaseController.list();
 
     const choices = memoLists.map((result) => ({
       name: result.title,
