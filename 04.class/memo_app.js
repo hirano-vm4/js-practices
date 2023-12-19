@@ -60,9 +60,6 @@ export class MemoApp {
     });
 
     const lines = new Promise((resolve) => {
-      console.log(
-        "・メモの入力が終わったら改行して`control + D`を押してください\n・1行目はタイトルです\n"
-      );
       const lines = [];
 
       rl.on("line", (line) => {
